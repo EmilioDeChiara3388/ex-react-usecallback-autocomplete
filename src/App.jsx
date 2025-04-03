@@ -1,24 +1,31 @@
-import { useState, useEffect } from "react"
+function debounce(callback, delay) {
+  let timer;
+  return (value) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      callback(value)
+    }, delay)
+  }
+}
+
+import { useState, useEffect, useCallback } from "react"
 
 function App() {
 
   const [search, setSearch] = useState("")
   const [products, setProducts] = useState([])
 
-  useEffect(() => {
-
-    async function getData() {
-      try {
-        const response = await fetch(`https://boolean-spec-frontend.vercel.app/freetestapi/products?search=${search}`)
-        const data = await response.json()
+  const getData = useCallback(debounce((search) => {
+    fetch(`https://boolean-spec-frontend.vercel.app/freetestapi/products?search=${search}`)
+      .then(res => res.json())
+      .then(data => {
         setProducts(data)
         console.log(data);
-      }
-      catch (error) {
-        console.error(error)
-      }
-    }
-    getData()
+      })
+  }, 500), [])
+
+  useEffect(() => {
+    getData(search)
   }, [search])
 
   const suggestions = products.filter(product => product.name.toLowerCase().includes(search.toLowerCase()))
