@@ -1,33 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react"
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [search, setSearch] = useState("")
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+
+    async function getData() {
+      try {
+        const response = await fetch(`https://boolean-spec-frontend.vercel.app/freetestapi/products?search=${search}`)
+        const data = await response.json()
+        setProducts(data)
+        console.log(data);
+      }
+      catch (error) {
+        console.error(error)
+      }
+    }
+    getData()
+  }, [search])
+
+  const suggestions = products.filter(product => product.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <input
+        type="text"
+        placeholder="Cerca..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)} />
+      <div className="productsContainer">
+        {search && suggestions.length > 0 ? suggestions.map(item =>
+          <p key={item.id}>{item.name}</p>
+        ) : <p>Nessun elemento trovato</p>}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
