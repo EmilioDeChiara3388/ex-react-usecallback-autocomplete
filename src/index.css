@@ -1,5 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 1rem;
+    text-align: center;
+}
+
+input {
+    width: 60%;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
 .productsContainer {
-    margin-top: 1rem;
+    width: 60%;
+    margin: auto;
     border: 1px solid black;
     border-radius: 5px;
     padding: 0.5rem;

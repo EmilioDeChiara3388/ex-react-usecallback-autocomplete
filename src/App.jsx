@@ -20,11 +20,15 @@ function App() {
       .then(res => res.json())
       .then(data => {
         setProducts(data)
-        console.log(data);
+        console.log("Debounce!");
       })
   }, 500), [])
 
   useEffect(() => {
+    if (!search.trim()) {
+      setProducts([])
+      return
+    }
     getData(search)
   }, [search])
 
@@ -32,16 +36,20 @@ function App() {
 
   return (
     <>
-      <input
-        type="text"
-        placeholder="Cerca..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)} />
-      <div className="productsContainer">
-        {search && suggestions.length > 0 ? suggestions.map(item =>
-          <p key={item.id}>{item.name}</p>
-        ) : <p>Nessun elemento trovato</p>}
+      <div className="container">
+        <h1>Autocompletamento</h1>
+        <input
+          type="text"
+          placeholder="Cerca..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} />
+        <div className="productsContainer">
+          {search && suggestions.length > 0 ? suggestions.map(item =>
+            <p key={item.id}>{item.name}</p>
+          ) : <p>Nessun elemento trovato</p>}
+        </div>
       </div>
+
     </>
   )
 }
